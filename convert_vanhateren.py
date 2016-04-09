@@ -36,3 +36,7 @@ def main():
     add_vanhateren_subset(file_handle, 'imc', imc_imglist, '/home/leelab_share/datasets/vanHateren/vanhateren_imc')
     add_vanhateren_subset(file_handle, 'imc', iml_imglist, '/home/leelab_share/datasets/vanHateren/vanhateren_iml')
     file_handle.close()
+
+
+if __name__ == '__main__':
+    main()
