@@ -34,7 +34,7 @@ def main():
 
     file_handle = h5py.File('vanHateren.hdf5', 'w-')
     add_vanhateren_subset(file_handle, 'imc', imc_imglist, '/home/leelab_share/datasets/vanHateren/vanhateren_imc')
-    add_vanhateren_subset(file_handle, 'imc', iml_imglist, '/home/leelab_share/datasets/vanHateren/vanhateren_iml')
+    add_vanhateren_subset(file_handle, 'iml', iml_imglist, '/home/leelab_share/datasets/vanHateren/vanhateren_iml')
     file_handle.close()
 
 
