@@ -11,19 +11,21 @@ def add_vanhateren_subset(h5handle: h5py.File, prefix, imglist, imgbase):
         assert len(imgname) == length_filename
     imglist_dtype = 'S' + str(length_filename)
 
-    data_handle = h5handle.create_dataset(prefix + '_data', shape=(1024, 1532, len(imglist)),
-                                          dtype=np.uint16, chunks=(1024, 1532, 1),
-                                          compression='gzip', shuffle=True, fletcher32=True)
-    h5handle.create_dataset(prefix + '_filelist', shape=(len(imglist),),
-                            dtype=imglist_dtype, data=np.array(imglist, dtype=imglist_dtype))
-
+    
+    imgarray_all = []
     for idx, imgname in enumerate(imglist):
         with open(os.path.join(imgbase, imgname), 'rb') as f:
             imgarray = np.fromfile(f, dtype='>u2').reshape((1024, 1536))
             assert imgarray.size == 1024 * 1536
             imgarray = imgarray[:, 2:-2]  # remove black stuff.
-            data_handle[:, :, idx] = imgarray  # endian ness will be handled by h5py.
+            imgarray_all.append(imgarray)
         print(idx)
+    h5handle.create_dataset(prefix + '_data', shape=(len(imglist), 1024, 1532),
+                            dtype=np.uint16, data=np.concatenate(imgarray_all),
+                            chunks=(1, 256, 1532),   # basically, make each chunk 1/4 of an image.
+                            compression='gzip', shuffle=True, fletcher32=True)
+    h5handle.create_dataset(prefix + '_filelist', shape=(len(imglist),),
+                            dtype=imglist_dtype, data=np.array(imglist, dtype=imglist_dtype))
 
 
 def main():

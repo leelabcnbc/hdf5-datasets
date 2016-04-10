@@ -27,22 +27,22 @@ def main():
     for chunk_idx in range(42):
         with Timer('read hdf5'):
             if chunk_idx < 41:
-                imc_subset_hdf5 = imc_dataset[:, :, chunk_idx * 100:(chunk_idx + 1) * 100]
-                iml_subset_hdf5 = iml_dataset[:, :, chunk_idx * 100:(chunk_idx + 1) * 100]
+                imc_subset_hdf5 = imc_dataset[chunk_idx * 100:(chunk_idx + 1) * 100, :, :]
+                iml_subset_hdf5 = iml_dataset[chunk_idx * 100:(chunk_idx + 1) * 100, :, :]
             else:
-                imc_subset_hdf5 = imc_dataset[:, :, chunk_idx * 100:]
-                iml_subset_hdf5 = iml_dataset[:, :, chunk_idx * 100:]
+                imc_subset_hdf5 = imc_dataset[chunk_idx * 100:,:,:]
+                iml_subset_hdf5 = iml_dataset[chunk_idx * 100:,:,:]
         with Timer('read mat'):
-            iml_subset_mat = sio.loadmat(os.path.join('/home/leelab_share/datasets/vanHateren_iml_MATLAB',
+            iml_subset_mat = sio.loadmat(os.path.join('/mnt/temp_drive_2/zym1010/datasets/vanHateren_iml_MATLAB',
                                                       'vanHaterenIML_{:02d}.mat'.format(chunk_idx + 1)))[
                 'vanHaterenIML'][
                 0, 0]['images']
-            imc_subset_mat = sio.loadmat(os.path.join('/home/leelab_share/datasets/vanHateren_imc_MATLAB',
+            imc_subset_mat = sio.loadmat(os.path.join('/mnt/temp_drive_2/zym1010/datasets/vanHateren_imc_MATLAB',
                                                       'vanHaterenIMC_{:02d}.mat'.format(chunk_idx + 1)))[
                 'vanHaterenIMC'][
                 0, 0]['images']
-        assert np.array_equal(iml_subset_mat, iml_subset_hdf5)
-        assert np.array_equal(imc_subset_mat, imc_subset_hdf5)
+        assert np.array_equal(iml_subset_mat, iml_subset_hdf5.transpose(1,2,0))
+        assert np.array_equal(imc_subset_mat, imc_subset_hdf5.transpose(1,2,0))
         print(chunk_idx)
 
     file_handle.close()
