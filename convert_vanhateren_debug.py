@@ -29,3 +29,6 @@ def main():
         print(chunk_idx)
 
     file_handle.close()
+
+if __name__ == '__main__':
+    main()
