@@ -65,4 +65,5 @@ target/
 /.idea
 
 # actual files
-*.hdf5
+/results/**
+!/results/.gitignore
